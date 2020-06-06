@@ -10,8 +10,8 @@ int Control::start () {
 
     int step = 0;
     std::string garbage;
-    while (step < 100) {
-        std::cout << "Step: " << step << std::endl;
+    while (step < 1000000) {
+        std::cout << "Step (Ctrl + C to quit or 1 000 000 steps): " << step << std::endl;
         std::cout << gameBoard->getString() << std::endl;
         std::getline(std::cin, garbage);
         gameBoard->advance();
