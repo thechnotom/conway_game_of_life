@@ -64,7 +64,7 @@ int** GameBoard::nextGameBoard () {
             }
             else {
                 // Reproduction
-                if (neighbours == 2 || neighbours == 3) {
+                if (neighbours == 3) {
                     set(next, row, col);
                 }
             }
