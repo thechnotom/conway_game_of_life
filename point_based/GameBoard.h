@@ -32,7 +32,12 @@ class GameBoard {
         bool isAlive (Point* point);
         std::set<Point*, ptrComp>* nextGameBoard ();
         int step;
-        void deallocateSet (std::set<Point*, ptrComp>* points);
+        bool deallocateSet (std::set<Point*, ptrComp>* points);
+        bool deallocateSet (std::set<Point*, ptrComp>* points, bool decrementUses);
+        bool clearSet (std::set<Point*, ptrComp>* points);
+        bool clearSet (std::set<Point*, ptrComp>* points, bool decrementUses);
+        bool deletePoint (Point* point);
+        bool deletePoint (Point* point, bool decrementUses);
 };
 
 #endif

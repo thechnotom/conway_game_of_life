@@ -35,7 +35,12 @@ Point::Point (const Point& point) {
     y = point.y;
 }
 
+Point::~Point () {
+    std::cout << "~Point: destroying Point " << toString() << std::endl;
+}
+
 void Point::init (int x, int y) {
+    instances = 0;
     if (y >= (X_MULTIPLIER / 10)) {
         Point::x = 0;
         Point::y = 0;
@@ -56,3 +61,7 @@ std::string Point::toString () const {
 Point Point::copy () {
     return Point(x, y);
 }
+
+void Point::addUse () { ++instances; }
+void Point::removeUse () { if (instances > 0) { --instances; } }
+int Point::getUses () { return instances; }
