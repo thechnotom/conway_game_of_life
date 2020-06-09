@@ -8,6 +8,7 @@ Purpose: Manage the state of the game
 
 #include "Point.h"
 #include "operators.cpp"
+#include "constants.h"
 
 #include <iostream>
 #include <string>
@@ -27,7 +28,6 @@ class GameBoard {
     private:
         void init ();
         std::set<Point*, ptrComp>* alive;
-        //std::set<Point*, ptrComp>* deadNeighbours;
         int numNeighbours (Point* point);
         void addNewNeighbours (Point* point, std::set<Point*, ptrComp>* points);
         bool isAlive (Point* point);
@@ -39,6 +39,7 @@ class GameBoard {
         bool clearSet (std::set<Point*, ptrComp>* points, bool decrementUses);
         bool deletePoint (Point* point);
         bool deletePoint (Point* point, bool decrementUses);
+        bool addPoint (Point* point, std::set<Point*, ptrComp>* points);
 };
 
 #endif

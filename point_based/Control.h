@@ -12,7 +12,7 @@ Purpose: Manage the progress of the game
 
 class Control {
     public:
-        static int start ();
+        static int start (int startX, int startY, int width, int height);
 
     private:
         Control ();

@@ -4,12 +4,6 @@ File: Point.cpp
 
 #include "Point.h"
 
-/*
-bool Point::operator() (const Point* point) {
-    return hash() < point->hash();
-}
-*/
-
 bool Point::operator== (const Point& point) const {
     return x == point.getX() && y == point.getY();
 }
@@ -31,31 +25,35 @@ Point::Point (int x, int y) {
 }
 
 Point::Point (const Point& point) {
-    std::cout << "Point (copy): copying Point" << this->toString() << std::endl;
+    if (SHOW_DEBUG_MESSAGES) { std::cout << "Point (copy): copying Point" << this->toString() << std::endl; }
     x = point.x;
     y = point.y;
 }
 
 Point::~Point () {
-    std::cout << "~Point: destroying Point " << toString() << std::endl;
+    if (SHOW_DEBUG_MESSAGES) { std::cout << "~Point: destroying Point " << toString() << std::endl; }
 }
 
 void Point::init (int x, int y) {
     instances = 0;
-    if (y >= (X_MULTIPLIER / 10)) {
+    if (abs(y) >= (POINT_HASH_MODIFIER / 10)) {
+        if (SHOW_CRITICAL_MESSAGES) { std::cout << "Point: WARNING - abs(y) exceeds maximum permitted value" << std::endl; }
         Point::x = 0;
         Point::y = 0;
     }
     Point::x = x;
     Point::y = y;
-
-    //std::cout << "Point: creating Point " << toString() << std::endl;
 }
 
 int Point::getX () const { return x; }
 int Point::getY () const { return y; }
 
-int Point::hash () const { return (X_MULTIPLIER * x) + y; }
+int Point::hash () const {
+    if (x != 0) {
+        return (POINT_HASH_MODIFIER * x) + y;
+    }
+    return POINT_HASH_MODIFIER + y;
+}
 
 std::string Point::toString () const {
     return "(" + std::to_string(x) + ", " + std::to_string(y) + ")";
@@ -68,3 +66,4 @@ Point Point::copy () {
 void Point::addUse () { ++instances; }
 void Point::removeUse () { if (instances > 0) { --instances; } }
 int Point::getUses () { return instances; }
+void Point::resetUses () { instances = 0; }

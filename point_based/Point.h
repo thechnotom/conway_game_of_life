@@ -6,11 +6,10 @@ File: Point.h
 Purpose: Store information for a point on a 2-dimensional plane
 */
 
+#include "constants.h"
+
 #include <iostream>
 #include <string>
-
-#define X_MULTIPLIER 1000000
-//#define X_MULTIPLIER 1000
 
 class Point {
     public:
@@ -26,10 +25,10 @@ class Point {
         bool operator> (const Point& point) const;
         std::string toString () const;
         Point copy ();
-        //bool operator() (const Point* point);
         void addUse ();
         void removeUse ();
         int getUses ();
+        void resetUses ();
 
     private:
         int x;
