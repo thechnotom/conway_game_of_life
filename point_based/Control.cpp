@@ -24,11 +24,10 @@ int Control::start () {
 }
 
 void Control::initGame (GameBoard* gameBoard) {
-    gameBoard->addInitPoint(2, 2);
-    gameBoard->addInitPoint(2, 3);
-    gameBoard->addInitPoint(3, 2);
+    //gameBoard->addInitPoint(2, 2);
+    //gameBoard->addInitPoint(2, 3);
+    //gameBoard->addInitPoint(3, 2);
 
-    /*
     gameBoard->addInitPoint(2, 2);
     gameBoard->addInitPoint(2, 3);
     gameBoard->addInitPoint(2, 4);
@@ -38,6 +37,7 @@ void Control::initGame (GameBoard* gameBoard) {
     gameBoard->addInitPoint(4, 3);
     gameBoard->addInitPoint(4, 4);
 
+    /*
     gameBoard->addInitPoint(25, 25);
     gameBoard->addInitPoint(25, 26);
     gameBoard->addInitPoint(25, 27);

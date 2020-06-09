@@ -11,47 +11,57 @@ GameBoard::GameBoard () {
 void GameBoard::init () {
     step = 0;
     alive = new std::set<Point*, ptrComp>;
-    deadNeighbours = new std::set<Point*, ptrComp>;
 }
 
 GameBoard::~GameBoard () {
     std::cout << "~GameBoard: destroying GameBoard" << std::endl;
     deallocateSet(alive, true);
-    deallocateSet(deadNeighbours, true);
 }
 
-int GameBoard::numNeighbours (Point* point, bool trackDead) {
+int GameBoard::numNeighbours (Point* point) {
     int result = 0;
     Point* currNeighbour;
     for (int xOffset = -1; xOffset <= 1; ++xOffset) {
         for (int yOffset = -1; yOffset <= 1; ++yOffset) {
             if (xOffset == 0 && yOffset == 0) {
-                std::cout << "numNeighbours: origin cell, doing nothing" << std::endl;
                 continue;
             }
             currNeighbour = new Point(point->getX() + xOffset, point->getY() + yOffset);
             if (isAlive(currNeighbour)) {
                 //std::cout << "numNeighbours: found living neighbour" << std::endl;
                 result += 1;
-                std::cout << "numNeighbours: living cell, attempting to delete temp Point --- ";
-                deletePoint(currNeighbour);
             }
-            // Mark neighbours that need to be checked
-            else {
-                if (trackDead) {
-                    std::cout << "numNeighbours: adding dead neighbour at Point " << currNeighbour->toString() << std::endl;
-                    currNeighbour->addUse();
-                    deadNeighbours->insert(currNeighbour);
-                }
-                else {
-                    std::cout << "numNeighbours: dead cell, no tracking, attempting to delete temp Point --- ";
-                    deletePoint(currNeighbour);
-                }
-            }
+            std::cout << "numNeighbours: attempting to delete temp Point --- ";
+            deletePoint(currNeighbour);
         }
     }
     //std::cout << "numNeighbours: living neighbours found: " << result << std::endl;
     return result;
+}
+
+void GameBoard::addNewNeighbours (Point* point, std::set<Point*, ptrComp>* points) {
+    Point* currPoint;
+    std::cout << "addNewNeighbours: adding new neighbours around Point " << point->toString() << std::endl;
+    for (int xOffset = -1; xOffset <= 1; ++xOffset) {
+        for (int yOffset = -1; yOffset <= 1; ++yOffset) {
+            if (xOffset == 0 && yOffset == 0) {
+                continue;
+            }
+            currPoint = new Point(point->getX() + xOffset, point->getY() + yOffset);
+            // Resurrection
+            if (!isAlive(currPoint) && numNeighbours(currPoint) == 3) {
+                std::cout << "addNewNeighbours: adding new neighbour Point " << currPoint->toString() << std::endl;
+                if (points->count(currPoint) == 0) {
+                    currPoint->addUse();  // CHECK HERE TO SEE IF DUPLICATES ARE ALSO BEING COUTNED (or see if this happens elsewhere)
+                }
+                points->insert(currPoint);
+            }
+            else {
+                std::cout << "addNewNeighbours: already alive or no revive, attempting to delete temp Point --- ";
+                deletePoint(currPoint);
+            }
+        }
+    }
 }
 
 bool GameBoard::isAlive (Point* point) {
@@ -62,58 +72,32 @@ bool GameBoard::isAlive (Point* point) {
 }
 
 std::set<Point*, ptrComp>* GameBoard::nextGameBoard () {
-    //std::cout << "creating next GameBoard" << std::endl;
-    //std::cout << "nextGameBoard: alive size (start): " << alive->size() << std::endl;
-    std::cout << "clearing deadNeighbours (b)" << std::endl;
-    clearSet(deadNeighbours, true);
-    std::cout << "cleared deadNeighbours (b)" << std::endl;
-    //std::cout << "alive size (after clearing deadNeighbours): " << alive->size() << std::endl;
     std::set<Point*, ptrComp>* next = new std::set<Point*, ptrComp>;
-    std::set<Point*, ptrComp>* pergatory = new std::set<Point*, ptrComp>;
     //std::cout << "alive size (after allocating next): " << alive->size() << std::endl;
     int neighbours;
     for (std::set<Point*, ptrComp>::iterator it = alive->begin(); it != alive->end(); ++it) {
         // Count the number of living neighbours and populate GameBoard::deadNeighbours
-        neighbours = numNeighbours(*it, true);
+        neighbours = numNeighbours(*it);
         if (isAlive(*it)) {
             // Survival
             if (neighbours == 2 || neighbours == 3) {
-                // Do not add to Point use as it is only being re-added to the next game
+                (*it)->addUse();
                 next->insert(*it);
             }
 
             // Death (underpopulation or overpopulation)
             else {
                 //std::cout << "cell died, removing: " << (*it)->toString() << std::endl;
-                pergatory->insert(*it);
+                (*it)->removeUse();
             }
         }
+
+        // Add the neighbours of the current Point that will be resurrected
+        std::cout << "nextGameBoard: beginning to add new neighbours for Point " << (*it)->toString() << std::endl;
+        addNewNeighbours(*it, next);
+        std::cout << "nextGameBoard: finished the addition of new neighbours for Point " << (*it)->toString() << std::endl;
     }
 
-    //std::cout << "alive size: " << alive->size() << std::endl;
-    std::cout << "completed alive cells -- testing deadNeighbours" << std::endl;
-    for (std::set<Point*, ptrComp>::iterator it = deadNeighbours->begin(); it != deadNeighbours->end(); ++it) {
-        std::cout << "dead neighbours: testing Point " << (*it)->toString() << std::endl;
-        neighbours = numNeighbours(*it, false);
-        //(*it)->addUse();
-        if (neighbours == 3) {
-            // Reproduction
-            (*it)->addUse();
-            next->insert(*it);
-        }
-        else {
-            pergatory->insert(*it);
-        }
-    }
-
-    std::cout << "deallocating pergatory" << std::endl;
-    deallocateSet(pergatory, false);
-    std::cout << "deallocated pergatory" << std::endl;
-    std::cout << "clearing deadNeighbours (e)" << std::endl;
-    clearSet(deadNeighbours, true);
-    std::cout << "cleared deadNeighbours (e)" << std::endl;
-
-    std::cout << "completed dead neighbours" << std::endl;
     std::cout << "nextGameBoard: alive size (end): " << alive->size() << std::endl;
 
     return next;
@@ -123,7 +107,7 @@ void GameBoard::advance () {
     std::set<Point*, ptrComp>* temp = alive;
     alive = nextGameBoard();
     std::cout << "advance: deallocating temp" << std::endl;
-    deallocateSet(temp, false);
+    deallocateSet(temp, true);
     std::cout << "advance: deallocated temp" << std::endl;
     //delete temp;
     ++step;

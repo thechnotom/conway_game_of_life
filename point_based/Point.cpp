@@ -31,6 +31,7 @@ Point::Point (int x, int y) {
 }
 
 Point::Point (const Point& point) {
+    std::cout << "Point (copy): copying Point" << this->toString() << std::endl;
     x = point.x;
     y = point.y;
 }
@@ -47,6 +48,8 @@ void Point::init (int x, int y) {
     }
     Point::x = x;
     Point::y = y;
+
+    //std::cout << "Point: creating Point " << toString() << std::endl;
 }
 
 int Point::getX () const { return x; }

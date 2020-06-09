@@ -27,8 +27,9 @@ class GameBoard {
     private:
         void init ();
         std::set<Point*, ptrComp>* alive;
-        std::set<Point*, ptrComp>* deadNeighbours;
-        int numNeighbours (Point* point, bool trackDead);
+        //std::set<Point*, ptrComp>* deadNeighbours;
+        int numNeighbours (Point* point);
+        void addNewNeighbours (Point* point, std::set<Point*, ptrComp>* points);
         bool isAlive (Point* point);
         std::set<Point*, ptrComp>* nextGameBoard ();
         int step;
