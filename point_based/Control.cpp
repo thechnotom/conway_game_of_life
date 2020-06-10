@@ -4,9 +4,9 @@ File: Control.cpp
 
 #include "Control.h"
 
-int Control::start (int startX, int startY, int width, int height) {
+int Control::start (std::string filename, int startX, int startY, int width, int height) {
     GameBoard* gameBoard = new GameBoard();
-    initGame(gameBoard);
+    initGame(gameBoard, filename);
 
     int maxSteps = 100;
     std::string input;
@@ -26,46 +26,11 @@ int Control::start (int startX, int startY, int width, int height) {
     return 0;
 }
 
-void Control::initGame (GameBoard* gameBoard) {
-    /*
-    gameBoard->addInitPoint(2, 2);
-    gameBoard->addInitPoint(2, 3);
-    gameBoard->addInitPoint(3, 2);
-    gameBoard->addInitPoint(3, 3);
-    */
-
-    /*
-    gameBoard->addInitPoint(2, 2);
-    gameBoard->addInitPoint(2, 3);
-    gameBoard->addInitPoint(2, 4);
-    gameBoard->addInitPoint(3, 2);
-    gameBoard->addInitPoint(3, 4);
-    gameBoard->addInitPoint(4, 2);
-    gameBoard->addInitPoint(4, 3);
-    gameBoard->addInitPoint(4, 4);
-    */
-
-    gameBoard->addInitPoint(9, 9);
-    gameBoard->addInitPoint(9, 10);
-    gameBoard->addInitPoint(9, 11);
-    gameBoard->addInitPoint(10, 9);
-    gameBoard->addInitPoint(10, 11);
-    gameBoard->addInitPoint(11, 9);
-    gameBoard->addInitPoint(11, 10);
-    gameBoard->addInitPoint(11, 11);
-
-    gameBoard->addInitPoint(10, 9);
-    gameBoard->addInitPoint(10, 11);
-    gameBoard->addInitPoint(11, 9);
-
-    /*
-    gameBoard->addInitPoint(25, 25);
-    gameBoard->addInitPoint(25, 26);
-    gameBoard->addInitPoint(25, 27);
-    gameBoard->addInitPoint(26, 25);
-    gameBoard->addInitPoint(26, 27);
-    gameBoard->addInitPoint(27, 25);
-    gameBoard->addInitPoint(27, 26);
-    gameBoard->addInitPoint(27, 27);
-    */
+void Control::initGame (GameBoard* gameBoard, std::string filename) {
+    std::vector<Point*>* points = FileIO::getData(filename);
+    for (unsigned i = 0; i < points->size(); ++i) {
+        gameBoard->addInitPoint(points->at(i)->getX(), points->at(i)->getY());
+        delete points->at(i);
+    }
+    delete points;
 }

@@ -11,6 +11,8 @@ Purpose: Store information for a point on a 2-dimensional plane
 #include <iostream>
 #include <string>
 
+#define POINT_HASH_MODIFIER 1000000
+
 class Point {
     public:
         Point ();

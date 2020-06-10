@@ -7,6 +7,7 @@ File: constants.h
 
 #define SHOW_DEBUG_MESSAGES false
 #define SHOW_CRITICAL_MESSAGES true
-#define POINT_HASH_MODIFIER 1000000
+#define SHOW_IMPORT_MESSAGES true
+#define SHOW_PARSE_MESSAGES true
 
 #endif
