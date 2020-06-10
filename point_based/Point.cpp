@@ -49,10 +49,7 @@ int Point::getX () const { return x; }
 int Point::getY () const { return y; }
 
 int Point::hash () const {
-    if (x != 0) {
-        return (POINT_HASH_MODIFIER * x) + y;
-    }
-    return POINT_HASH_MODIFIER + y;
+    return (POINT_HASH_MODIFIER * x) + y;
 }
 
 std::string Point::toString () const {
