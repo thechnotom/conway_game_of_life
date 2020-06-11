@@ -6,6 +6,8 @@ File: main.cpp
 #include "FileIO.h"
 
 int main(int argc, char* argv[]) {
-    //FileIO::importData("test.txt");
+    if (argc == 2) {
+        return Control::start(argv[1], 0, 0, 20, 20);
+    }
     return Control::start("data.txt", 0, 0, 20, 20);
 }
