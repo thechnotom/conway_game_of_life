@@ -8,7 +8,7 @@ int Control::start (std::string filename, int startX, int startY, int width, int
     GameBoard* gameBoard = new GameBoard();
     initGame(gameBoard, filename);
 
-    int maxSteps = 100;
+    int maxSteps = 1000000;
     std::string input;
     std::cout << gameBoard->getString(startX, startY, width, height) << std::endl;
     while (gameBoard->getStep() <= maxSteps) {
