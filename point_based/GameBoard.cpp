@@ -203,3 +203,7 @@ bool GameBoard::addPoint (Point* point, std::set<Point*, ptrComp>* points) {
     deletePoint(point, true);
     return false;
 }
+
+std::set<Point*, ptrComp>* GameBoard::getAlive () {
+    return alive;
+}

@@ -24,6 +24,7 @@ class GameBoard {
         std::string getString (int startX, int startY, int width, int height);
         int getStep ();
         void addInitPoint (int x, int y);
+        std::set<Point*, ptrComp>* getAlive ();
 
     private:
         void init ();
